@@ -9,10 +9,16 @@ router.get('/', async (req, res) => {
     // Find all tags
     const tagData = await Tag.findAll({
       // Include associated Product data
-      include: ({ model: ProductTag, through: Product, as: 'product_tag' })
- });
+      include: [
+        {
+          model: Product, // must specify the associated model
+          through: ProductTag, // must specify the intermediary model
+          as: 'products', // must specify the alias (as defined in your model association) like in sql where we use AS to give a table an alias name
+        },
+      ],
+    });
 
- res.status(200).json(tagData);
+    res.status(200).json(tagData);
   } catch (error) {
     console.error(error);
     res.status(500).json(error);
@@ -25,11 +31,16 @@ router.get('/:id', async (req, res) => {
     // Find a single tag by its `id`
     const tagData = await Tag.findByPk(req.params.id, {
       // Include associated Product data
-      include: ({ model: Product, through: ProductTag})
+      include: [
+        {
+          model: Product, // must specify the associated model
+          through: ProductTag, // must specify the intermediary model
+        },
+      ],
     });
 
     if (!tagData) {
-      res.status(404).json({ message: 'Tag not found.' });
+      res.status(404).json({ message: 'Failed to find the requested Tag Data.' });
       return;
     }
 
@@ -40,18 +51,22 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Create a new tag
+// The POST request handler for a specific tag-routes
 router.post('/', async (req, res) => {
-  try {
-    // Create a new tag
-    const tagData = await Tag.create(req.body);
+  // Create a new tag
 
-    res.status(201).json(tagData);
-  } catch (error) {
-    console.error(error);
-    res.status(400).json(error);
+  try {
+    // Use the 'Tag' model to create a new tag with data from the request body.
+    const tagData = await Tag.create(req.body);
+    
+    // If the tag is successfully created, send a 200 OK response with the tag data in JSON format.
+    res.status(200).json(tagData);
+    
+  } catch (err) {
+    res.status(404).json({ message: 'Failed to find the requested Tag Data.' });
   }
 });
+
 
 // Update a tag's name by its `id` value
 router.put('/:id', async (req, res) => {
@@ -69,7 +84,7 @@ router.put('/:id', async (req, res) => {
     );
 
     if (!tagData[0]) {
-      res.status(404).json({ message: 'Tag not found.' });
+      res.status(404).json({ message: 'Failed to find the requested Tag Data.' });
       return;
     }
 
@@ -79,6 +94,8 @@ router.put('/:id', async (req, res) => {
     res.status(400).json(error);
   }
 });
+
+
 
 
 // Delete one tag by its `id` value
@@ -92,7 +109,7 @@ router.delete('/:id', async (req, res) => {
     });
 
     if (!tagData) {
-      res.status(404).json({ message: 'Tag not found.' });
+      res.status(404).json({ message: 'Failed to find the requested Tag Data.' });
       return;
     }
 

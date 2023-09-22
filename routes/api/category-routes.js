@@ -27,7 +27,7 @@ router.get('/:id', async (req, res) => {
     });
 
     if (!categoryData) {
-      res.status(404).json({ message: 'Category not found' });
+      res.status(404).json({ message: 'Failed to find the requested Category Data.' });
       return;
     }
 
@@ -68,11 +68,11 @@ router.put('/:id', async (req, res) => {
     );
 
     if (!categoryData[0]) {
-      res.status(404).json({ message: 'Category not found' });
+      res.status(404).json({ message: 'Failed to find the requested Category Data.' });
       return;
     }
 
-    res.json({ message: 'Category updated successfully' });
+    res.json({ message: 'Category updated successfully.' });
   } catch (err) {
     console.error(err);
     res.status(500).json(err);
@@ -89,11 +89,11 @@ router.delete('/:id', async (req, res) => {
     });
 
     if (!categoryData) {
-      res.status(404).json({ message: 'Category not found' });
+      res.status(404).json({ message: 'Failed to find the requested Category Data.' });
       return;
     }
 
-    res.json({ message: 'Category deleted successfully' });
+    res.json({ message: 'Category deleted successfully.' });
   } catch (err) {
     console.error(err);
     res.status(500).json(err);

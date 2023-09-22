@@ -68,47 +68,62 @@ router.post('/', async (req, res) => {
 // Update product by its `id`
 router.put('/:id', async (req, res) => {
   try {
+    const productId = req.params.id;
+    const updatedProductData = req.body;
+
     // Update product data
-    const updatedProduct = await Product.update(req.body, {
+    const [updatedRowCount] = await Product.update(updatedProductData, {
       where: {
-        id: req.params.id,
+        id: productId,
       },
     });
 
-    // If there are new product tags, update the ProductTag model
-    if (req.body.tagIds && req.body.tagIds.length) {
-      // get existing product tags
-      const productTags = await ProductTag.findAll({
-        where: { product_id: req.params.id },
+    // Check if the product was found and updated
+    if (updatedRowCount === 0) {
+      res.status(404).json({ message: 'Failed to find the requested Product Data.' });
+      return;
+    }
+
+    // If there are new product tags, update the ProductTag model within a transaction
+    if (updatedProductData.tagIds && updatedProductData.tagIds.length) {
+      // Get existing product tags
+      const existingProductTags = await ProductTag.findAll({
+        where: { product_id: productId },
       });
 
-      // Create a filtered list of new tag_ids
-      const productTagIds = productTags.map(({ tag_id }) => tag_id);
-      const newProductTags = req.body.tagIds
-        .filter((tag_id) => !productTagIds.includes(tag_id))
-        .map((tag_id) => {
-          return {
-            product_id: req.params.id,
-            tag_id,
-          };
+      // get existing tag_ids
+      const existingTagIds = existingProductTags.map(({ tag_id }) => tag_id);
+
+      // get new tag_ids from the request
+      const newTagIds = updatedProductData.tagIds;
+
+      // Identify tag_ids to remove and add
+      const tagIdsToRemove = existingTagIds.filter((tagId) => !newTagIds.includes(tagId));
+      const tagIdsToAdd = newTagIds.filter((tagId) => !existingTagIds.includes(tagId));
+
+      // Remove tags within a transaction
+      await sequelize.transaction(async (t) => {
+        await ProductTag.destroy({
+          where: {
+            product_id: productId,
+            tag_id: tagIdsToRemove,
+          },
+          transaction: t,
         });
 
-      // Figure out which ones to remove
-      const productTagsToRemove = productTags
-        .filter(({ tag_id }) => !req.body.tagIds.includes(tag_id))
-        .map(({ id }) => id);
-
-      // Run both actions (remove and create) within a transaction
-      await sequelize.transaction(async (t) => {
-        await ProductTag.destroy({ where: { id: productTagsToRemove }, transaction: t });
+        // Create new ProductTag records
+        const newProductTags = tagIdsToAdd.map((tag_id) => ({
+          product_id: productId,
+          tag_id,
+        }));
         await ProductTag.bulkCreate(newProductTags, { transaction: t });
       });
     }
 
-    res.json(updatedProduct);
+    res.json({ message: 'Product updated successfully.' });
   } catch (err) {
     console.error(err);
-    res.status(400).json(err);
+    res.status(400).json({ message: 'Failed to update requested Product Data.' });
   }
 });
 
@@ -123,14 +138,14 @@ router.delete('/:id', async (req, res) => {
     });
 
     if (!productData) {
-      res.status(404).json({ message: 'Product not found.' });
+      res.status(404).json({ message: 'Failed to find the requested Product Data.' });
       return;
     }
 
     res.json({ message: 'Product deleted successfully.' });
   } catch (err) {
     console.error(err);
-    res.status(500).json(err);
+    res.status(500).json({ message: 'Failed to delete product.' });
   }
 });
 
