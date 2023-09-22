@@ -1,5 +1,13 @@
 # E-Commerce Backend (using Object-Relational Mapping (ORM) for SQL Database)
 
+## Table of Contents
+
+- [Description](#description)
+- [Installation](#installation)
+- [Tests In Insomnia](#tests-in-insomnia)
+- [Credits](#credits)
+- [License](#license)
+
 ## Description
 
 In the world of Internet, online shopping and owning online businesses is a trend. This is an E-Commerce Backend built using Object-Relational Mapping (ORM) for SQL Database. It is a server-side application that powers the functionality of an online store. A few learning points for me were:
@@ -26,24 +34,31 @@ The E-Commerce Backend using ORM for SQL Database addresses the following proble
 
 6. **Inventory Management:** It assists in keeping track of product availability and automates inventory updates as orders are placed.
 
-## Table of Contents
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [Credits](#credits)
-- [License](#license)
-
 ## Installation
 
-What are the steps required to install your project? Provide a step-by-step description of how to get the development environment running.
+No installation steps are required to view the project's functionality. Simply follow the walkthrough video below to see the routes and functionality in action.
 
-## Usage
+[View Walkthrough Video](https://watch.screencastify.com/v/4SyidmgdqGKth92X8xXz)
 
-Provide instructions and examples for use. Include screenshots as needed.
+## Tests In Insomnia
 
-To add a screenshot, create an `assets/images` folder in your repository and upload your screenshot to it. Then, using the relative file path, add it to your README using the following syntax:
+a. **Testing All Categories Routes**
 
-![alt text](assets/images/screenshot.png)
+Sent GET request to view all the categories with associated products information, results as expected
+
+![All Category Routes Test](/assets/images/Allcategories.png)
+
+b. **Testing All Product Routes**
+
+Sent GET requests to view all the products by and associated category_id and tag_id, results as expected
+
+![Products By Tag & Category Routes Test](assets/images/AllProducts.png)
+
+c. **Testing All Tag Routes**
+
+Sent GET request to view all the Tags with associated product_id and category_id, results as expected
+
+![Tag Routes Test](assets/images/AllTags.png)
 
 ## Credits
 
