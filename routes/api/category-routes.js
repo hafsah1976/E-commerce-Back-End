@@ -1,27 +1,27 @@
-// Import necessary modules and models
+// Importing necessary modules and models
 const router = require('express').Router();
 const { Category, Product } = require('../../models');
 
 // The `/api/categories` endpoint
 router.get('/', async (req, res) => {
   try {
-    // Find all categories
+    // Finding all categories
     const categoryData = await Category.findAll({
-      // Include associated Products
+      // Include associated Products 
       include: [{ model: Product }],
     });
 
-    // Check if there are no categories found
+    // Checking if there are no categories found
     if (categoryData.length === 0) {
       return res.status(404).json({ message: 'No categories found.' });
     }
 
-    // Send the category data as a JSON response
+    // Sending the category data as a JSON response
     res.json(categoryData);
   } catch (error) {
     console.error(error);
 
-    // Send a 500 Internal Server Error response with an error message
+    // Sending a 500 Internal Server Error response with a detail error message
     res.status(500).json({ error: 'Internal Server Error', details: error.message });
   }
 });
@@ -47,8 +47,26 @@ router.get('/:id', async (req, res) => {
     // If an error occurs during the process, log the error to the console
     console.error(error);
     // Send a 500 Internal Server Error response with the error details as JSON
-    res.status(500).json(error);
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
+
   }
 });
 
+// Define a POST route for creating a new category
+router.post('/', async (req, res) => {
+  try {
+    // Create a new category using the Category model and the data from the request body
+    const categoryData = await Category.create({
+      category_Name: req.body.category_Name,
+    });
 
+    // Send a 201 Created status along with the created category data as a JSON response
+    res.status(201).json(categoryData);
+  } catch (error) {
+    // If there's an error during the process, log the error to the console
+    console.log('Failed to post category.', error);
+
+    // Send a 500 Internal Server Error response with an error message
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
+  }
+});
