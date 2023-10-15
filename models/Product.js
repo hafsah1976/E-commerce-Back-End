@@ -13,14 +13,14 @@ Product.init(
         // Define the id column
         id: {
             type: DataTypes.INTEGER,
-            allowNull: false,      
-            primaryKey: true,       
-            autoIncrement: true   
+            allowNull: false,      // The id cannot be null
+            primaryKey: true,      // It's the primary key
+            autoIncrement: true    // It auto-increments
         },
         // Define the product_name column, which stores product names
         product_name: {
             type: DataTypes.STRING,
-            allowNull: false       
+            allowNull: false       // The product_name cannot be null
         },
         // Define the price column, which stores product prices as DECIMAL(10,2)
         price: {
@@ -43,18 +43,18 @@ Product.init(
         category_id: {
             type: DataTypes.INTEGER,
             references: {
-                model: "category", 
-                key: "id"         
+                model: "category", // References the "category" model
+                key: "id"          // References the "id" field in the "category" model
             }
         }
     },
     {
         // Pass the sequelize instance for database connection
         sequelize,
-        timestamps: false,       
-        freezeTableName: true, 
-        underscored: true,      
-        modelName: 'product',  
+        timestamps: false,       // Don't create createdAt and updatedAt columns
+        freezeTableName: true,   // Use the model name as the table name
+        underscored: true,      // Use snake_case for column names
+        modelName: 'product',   // Set the model name to 'product'
     }
 );
 
