@@ -22,3 +22,29 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error', details: error.message });
   }
 });
+
+// Get one product by its `id`
+router.get('/:id', async (req, res) => {
+  try {
+    // Find a single product by its `id` using the Product model
+    const productData = await Product.findByPk(req.params.id, {
+      // Include associated Category and Tag data in the result
+      include: [{ model: Category }, { model: Tag }],
+    });
+
+    // Check if no product was found with the given ID
+    if (!productData) {
+      res.status(404).json({ message: 'Failed to find the requested Product.' });
+      return;
+    }
+
+    // Send the product data, including associated Category and Tag data, as a JSON response
+    res.json(productData);
+  } catch (error) {
+    // If an error occurs during the process, log the error to the console
+    console.error(error);
+    // Send a 500 Internal Server Error response with the error details as JSON
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
+  }
+});
+
