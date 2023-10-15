@@ -98,6 +98,35 @@ router.put('/:id', async (req, res) => {
     // If an error occurs during the process, log the error to the console
     console.error(error);
     // Sending a 500 Internal Server Error response with the error details as JSON
-    res.status(500).json(error);
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
   }
 });
+
+// Defining the DELETE route for deleting a category by its ID
+router.delete('/:id', async (req, res) => {
+  try {
+    // query to Delete a category by its `id` value using the Category model
+    const categoryData = await Category.destroy({
+      where: {
+        id: req.params.id, // Delete the category with the provided ID
+      },
+    });
+
+    // Checking if no category was deleted (categoryData === 0) due to not finding the category with the given ID
+    if (!categoryData) {
+      res.status(404).json({ message: 'Failed to find the requested Category Data.' });
+      return;
+    }
+
+    // Sending a success message in the response to indicate that the category was deleted successfully
+    res.json({ message: 'Category deleted successfully.' });
+  } catch (error) {
+    // If an error occurs during the process, log the error to the console
+    console.error(error);
+    // Send an Internal Server Error response with the error details as JSON
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
+  }
+});
+
+module.exports = router; // Export the router for use in other parts of the application
+
