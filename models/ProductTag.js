@@ -13,34 +13,34 @@ ProductTag.init(
         // Define the id column
         id: {
             type: DataTypes.INTEGER,
-            allowNull: false,      
-            primaryKey: true,      
-            autoIncrement: true   
+            allowNull: false,      // The id cannot be null
+            primaryKey: true,      // It's the primary key
+            autoIncrement: true    // It auto-increments
         },
         // Define the product_id column as a foreign key referencing the product model
         product_id: {
             type: DataTypes.INTEGER,
             references: {
-                model: "product",
-                key: "id"         
+                model: "product", // References the "product" model
+                key: "id"          // References the "id" field in the "product" model
             }
         },
         // Define the tag_id column as a foreign key referencing the tag model
         tag_id: {
             type: DataTypes.INTEGER,
             references: {
-                model: "tag",  
-                key: "id"      
+                model: "tag",  // References the "tag" model
+                key: "id"      // References the "id" field in the "tag" model
             }
         }
     },
     {
         // Pass the sequelize instance for database connection
         sequelize,
-        timestamps: false,       
-        freezeTableName: true,  
-        underscored: true,      
-        modelName: 'product_tag',
+        timestamps: false,       // Don't create createdAt and updatedAt columns
+        freezeTableName: true,   // Use the model name as the table name
+        underscored: true,       // Use snake_case for column names
+        modelName: 'product_tag', // Set the model name to 'product_tag'
     }
 );
 
