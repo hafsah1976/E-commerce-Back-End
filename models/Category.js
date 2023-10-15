@@ -1,8 +1,8 @@
-// Import necessary modules and dependencies
+// Importing the necessary modules and dependencies
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection.js');
 
-// Define the Category model class
+// Defining the Category model class
 class Category extends Model {}
 
 // Initialize the Category model with its properties
