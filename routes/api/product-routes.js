@@ -48,3 +48,33 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// Create a new product
+router.post('/', async (req, res) => {
+  try {
+    // Create a new product using the Product model and data from the request body
+    const productData = await Product.create(req.body);
+
+    // If there are product tags (tagIds) provided, create associations in the ProductTag model
+    if (req.body.tagIds && req.body.tagIds.length) {
+      // Prepare an array of objects for bulk creation in the ProductTag model
+      const productTagIdArr = req.body.tagIds.map((tag_id) => {
+        return {
+          product_id: productData.id, // Assign the product's ID
+          tag_id, // Assign the tag's ID
+        };
+      });
+
+      // Bulk create product-tag associations in the ProductTag model
+      await ProductTag.bulkCreate(productTagIdArr);
+    }
+
+    // Send a 201 Created status along with the created product data as a JSON response
+    res.status(201).json(productData);
+  } catch (error) {
+    // If an error occurs during the process, log the error to the console
+    console.error(error);
+    // Send a 400 Bad Request status along with the error details as JSON
+    res.status(400).json({error: 'Bad Request', details: error.message});
+  }
+});
+
