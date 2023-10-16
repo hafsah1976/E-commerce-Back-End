@@ -80,5 +80,40 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Update a tag's name by its `id` value
+router.put('/:id', async (req, res) => {
+  try {
+    // Update the tag's name using the 'Tag' model
+    const tagData = await Tag.update(
+      {
+        tag_name: req.body.tag_name, // Update the 'tag_name' field with the new value from the request body
+      },
+      {
+        where: {
+          id: req.params.id, // Find the tag by its 'id' specified in the request parameters
+        },
+      }
+    );
+
+    // Check if the tag was not found and not updated
+    if (!tagData[0]) {
+      // Respond with a 404 Not Found status and an error message
+      res.status(404).json({ message: 'Failed to find the requested Tag Data.' });
+      return;
+    }
+
+    // Respond with a success message upon successful update
+    res.json({ message: 'Tag updated successfully.' });
+  } catch (error) {
+    // If an error occurs during the update process, log the error to the console
+    console.error(error);
+
+    // Send a 400 Bad Request status along with the error details
+    res.status(400).json({ error: 'Failed to Update the tag.', details: error.message });
+
+  }
+});
+
+
 
 module.exports = router; // export the router for using in other parts of the application

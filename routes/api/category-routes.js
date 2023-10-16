@@ -57,7 +57,7 @@ router.post('/', async (req, res) => {
   try {
     // Creating a new category using the Category model and the data from the request body
     const categoryData = await Category.create({
-      category_Name: req.body.category_Name,
+      category_name: req.body.category_name,
     });
 
     // Sending a 201 Created status along with the created category data as a JSON response
@@ -77,7 +77,7 @@ router.put('/:id', async (req, res) => {
     //query to Update a category by its `id` value using the Category model
     const categoryData = await Category.update(
       {
-        category_Name: req.body.category_Name, // Update the category name based on the request body
+        category_name: req.body.category_name, // Update the category name based on the request body
       },
       {
         where: {

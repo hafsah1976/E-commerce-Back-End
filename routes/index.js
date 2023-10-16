@@ -1,4 +1,6 @@
 const router = require('express').Router();
+const apiRoutes = require('./api');
+
 
 // Include the API routes defined in the 'apiRoutes' module
 router.use('/api', apiRoutes);
