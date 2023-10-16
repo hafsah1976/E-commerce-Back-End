@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { Tag, Product, ProductTag } = require('../../models');
 
-// defining routes for the `/api/tags` endpoint
+// defining CRUD routes for the `/api/tags` endpoint
 
 // Get all tags
 router.get('/', async (req, res) => {
@@ -44,7 +44,7 @@ router.get('/:id', async (req, res) => {
 
     // Check if the tag was not found
     if (!tagData) {
-      
+
       // Respond with a 404 Not Found status and an error message
       res.status(404).json({ message: 'Failed to find the requested Tag Data.' });
       return;
@@ -61,5 +61,24 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error', details: error.message });
   }
 });
+
+// The POST request handler for creating a new tag
+router.post('/', async (req, res) => {
+  try {
+    // Use the 'Tag' model to create a new tag with data from the request body.
+    const tagData = await Tag.create(req.body);
+
+    // If the tag is successfully created, send a 200 OK response with the tag data in JSON format.
+    res.status(201).json(tagData); // Use 201 status code for successful resource creation
+
+  } catch (error) {
+    // If an error occurs during the creation process, log the error to the console
+    console.error(error);
+
+    // Send a 400 Bad Request status along with an error message and error details
+    res.status(400).json({ error: 'Failed to create the tag.', details: error.message });
+  }
+});
+
 
 module.exports = router; // export the router for using in other parts of the application
