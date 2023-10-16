@@ -95,8 +95,9 @@ router.put('/:id', async (req, res) => {
       }
     );
 
-    // Check if the tag was not found and not updated
+    // Checking if the tag was not found and not updated
     if (!tagData[0]) {
+
       // Respond with a 404 Not Found status and an error message
       res.status(404).json({ message: 'Failed to find the requested Tag Data.' });
       return;
@@ -104,6 +105,7 @@ router.put('/:id', async (req, res) => {
 
     // Respond with a success message upon successful update
     res.json({ message: 'Tag updated successfully.' });
+
   } catch (error) {
     // If an error occurs during the update process, log the error to the console
     console.error(error);
@@ -114,6 +116,32 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+// Delete one tag by its `id` value
+router.delete('/:id', async (req, res) => {
+  try {
+    // Delete a tag by its `id` value using the 'Tag' model
+    const tagData = await Tag.destroy({
+      where: {
+        id: req.params.id, // Find the tag by its 'id' specified in the request parameters
+      },
+    });
 
+    // Check if the tag was not found and not deleted
+    if (!tagData) {
+      // Respond with a 404 Not Found status and an error message
+      res.status(404).json({ message: 'Failed to find the requested Tag Data.' });
+      return;
+    }
+
+    // Respond with a success message upon successful deletion
+    res.json({ message: 'Tag deleted successfully.' });
+  } catch (error) {
+    // If an error occurs during the deletion process, log the error to the console
+    console.error(error);
+
+    // Send a 500 Internal Server Error status along with the error details
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
+  }
+});
 
 module.exports = router; // export the router for using in other parts of the application
