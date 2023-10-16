@@ -163,5 +163,30 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+// Delete one product by its `id` value
+router.delete('/:id', async (req, res) => {
+  try {
+    // Attempt to delete the product by its ID using the Product model
+    const productData = await Product.destroy({
+      where: {
+        id: req.params.id, // Find the product by its ID in the request parameters
+      },
+    });
 
+    // Check if the product was not found and not deleted
+    if (!productData) {
+      res.status(404).json({ message: 'Failed to find the requested Product Data.' });
+      return;
+    }
 
+    // Respond with a success message upon successful deletion
+    res.json({ message: 'Product deleted successfully.' });
+  } catch (error) {
+    // If an error occurs during the process, log the error to the console
+    console.error(error);
+    // Send a 500 Internal Server Error status along with an error message
+    res.status(500).json({ message: 'Failed to delete the requested product.', details: error.message });
+  }
+});
+
+module.exports = router;
