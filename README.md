@@ -38,7 +38,7 @@ The E-Commerce Backend using ORM for SQL Database addresses the following proble
 
 No installation steps are required to view the project's functionality. Simply follow the walkthrough video below to see the routes and functionality in action.
 
-[View Walkthrough Video](https://watch.screencastify.com/v/4SyidmgdqGKth92X8xXz)
+[View Walkthrough Video](https://watch.screencastify.com/v/YOaKaUUO6pY13Q22Mlea)
 
 ## Tests In Insomnia
 
